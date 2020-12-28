@@ -54,16 +54,12 @@ End module'mkTb.
 
 Definition spec:=
   MODULE {
-     Register "c" : Bit 4 <= Default
+     Register "c" : Bit 4 <- Default
      
     with Rule "increment" :=
-       Read c_val : Bit 4 <- "c";
-      Assert c_val <<== #15;
-      LET c <- #c+$1;
-      call unused : Void <- (Methodsig ("display") ((Bit 4)):Void) (#c_val);
-      Assert c_val == #15;
-      call unused : Void <- (Methodsig ("#display")((Bit 4)):Void) (#c_val);
-      Assert c_val >> $15;
-      call unused :Void <- (Methodsig("$finish")():Void)();
+       Read c : Bit 4 <- "c" ;
+       If (#c <= $15) then (Write "c" : Bit 4 <- #c + $1 ; Retv ) else ( Retv );
+       If (#c == $15) then (Call unused : Void <- (MethodSig ("$finish") () : Void)  () ; Retv ) else ( Retv );
+       If (#c >= $15) then (Call unused1 : Void <- (MethodSig ("display") ((Bit 4)):Void) (#c) ; Retv ) else (Retv);
       Retv
     }.
