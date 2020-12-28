@@ -52,9 +52,12 @@ Module module'mkTb.
   End section'mkTb.
 End module'mkTb.
 
-Definition spec:=
+Module spec. 
+  Section section'spec.
+  Variable instancePrefix : string.
+  Definition spec:=
   MODULE {
-     Register "c" : Bit 4 <- Default
+     Register (instancePrefix -- "c") : Bit 4 <- Default
      
     with Rule "increment" :=
        Read c : Bit 4 <- "c" ;
@@ -63,3 +66,5 @@ Definition spec:=
        If (#c >= $15) then (Call unused1 : Void <- (MethodSig ("display") ((Bit 4)):Void) (#c) ; Retv ) else (Retv);
       Retv
     }.
+   End section'spec.
+End spec.
